@@ -87,9 +87,9 @@ int main()
 	int a2 = 11;
 	int a = a1 | a2;
 	int b = a1 + a2;
-	// printf("%d\n", a);
-	// printf("%d\n", b);
-	printf_d(n, 4);
+	printf("%d\n", a);
+	printf("%d\n", b);
+	// printf_d(n, 4);
 	// printf("%5d", n);
 	// n = length_itr(n, 1);
 	// printf("%4d", n);
