@@ -1,4 +1,6 @@
 #include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 void    ft_putchar(char letter)
 {
@@ -78,7 +80,7 @@ void    show(int *x)
         j = 0;
         while (j < 9)
         {
-            if (j == 0)
+            if (j++ == 0)
             {
                 printf_d(*x++, 1);
             }
@@ -86,7 +88,6 @@ void    show(int *x)
             {
                 printf_d(*x++, 2);
             }
-            j++;
         }
         ft_putchar('\n');
     }
@@ -115,7 +116,7 @@ void     calc_used(int *x, int *row, int *col, int *used)
     }
 }
 
-int     trycell(int *x, int pos)
+int     trycell(int *x, int pos, int *solutions)
 {
     int row;
     int col;
@@ -132,13 +133,13 @@ int     trycell(int *x, int pos)
     if (pos == 81)
         return (1);
     if (x[pos])
-        return (trycell(x, pos + 1));
+        return (trycell(x, pos + 1, solutions));
     calc_used(x, &row, &col, &used);
 
     x[pos] = 1;
     while (x[pos] <= 9)
     {
-        if (!(used & 1) && trycell(x, pos + 1)) return 1;
+        if (!(used & 1) && trycell(x, pos + 1, solutions)) return 1;
         used >>= 1;
         x[pos]++;
     }
@@ -146,12 +147,14 @@ int     trycell(int *x, int pos)
     return (0);
 }
  
-void    solve(const char *s)
+void    solve(char *s)
 {
     int i;
     int x[81];
+    int solutions;
 
     i = 0;
+    solutions = 0;
     while (i < 81)
     {
         if (s[i] >= '1' && s[i] <= '9')
@@ -160,22 +163,42 @@ void    solve(const char *s)
             x[i] = 0;
         else
         {
-            ft_putstr("no solution");
+            ft_putstr("Error\n");
             return ;
         }
         i++;
     }
-
-    if (trycell(x, 0))
+    if (trycell(x, 0, &solutions))
         show(x);
     else
-        ft_putstr("no solution");   
+        ft_putstr("Erorr\n");
 }
  
-int     main(void)
+int     main(int argc, char **argv)
 {
-  solve(  "9...7...." "2...9..53" ".6..124.." "84...1.9." "5.....8.." ".31..4..." "..37..68."
-".9..5.741" "47......." );
- 
-  return (0);
+    int len;
+    int i;
+    int j;
+    int k;
+    char x[81];
+
+    i = 1;
+    j = 0;
+    k = 0;
+    while (i < argc)
+    {
+        j = 0;
+        while ((argv[i][j] >= '0' && argv[i][j] <= '9') || argv[i][j] == '.')
+        {
+            if (argv[i][j] == '.')
+                x[k] = '.';
+            else
+                x[k] = argv[i][j]; 
+            k++;
+            j++;
+        }
+        i++;
+    }
+    solve(x);
+    return (0);
 }
